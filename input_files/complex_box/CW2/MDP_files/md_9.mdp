@@ -1,0 +1,65 @@
+title                    = Production 
+define		             = -DPOSRES -DPOSRES_LIG -DPOSRES_WATER
+; Run parameters
+integrator               = md        ; leap-frog integrator
+nsteps                   = 5000000
+dt                       = 0.002     ; 2 fs
+; OUTPUT CONTROL OPTIONS
+; Output frequency for coords (x), velocities (v) and forces (f)
+nstxout                  = 0
+nstvout                  = 0
+nstfout                  = 0
+; Checkpointing helps you continue after crashes
+nstcheckpoint            = 1000
+; Output frequency for energies to log file and energy file
+nstlog                   = 10000
+nstenergy                = 100000
+; Output frequency and precision for xtc file
+nstxtcout                = 10000
+xtc-precision            = 1000
+; Bond parameters
+continuation            = yes       ; continuing from NVT 
+constraint_algorithm    = lincs     ; holonomic constraints 
+constraints             = h-bonds   ; bonds to H are constrained 
+lincs_iter              = 1         ; accuracy of LINCS
+lincs_order             = 4         ; also related to accuracy
+; Neighbor searching and vdW
+cutoff-scheme           = Verlet
+ns_type                 = grid      ; search neighboring grid cells
+nstlist                 = 20        ; largely irrelevant with Verlet
+vdwtype                 = cutoff
+vdw-modifier            = force-switch
+rvdw                    = 1.2       ; short-range van der Waals cutoff (in nm)
+rlist					= 1.2
+rvdw-switch				= 1.0
+; Electrostatics
+coulombtype             = PME ; Particle Mesh Ewald for long-range electrostatics
+rcoulomb                = 1.2
+pme_order               = 4         ; cubic interpolation
+fourierspacing          = 0.16      ; grid spacing for FFT
+; Temperature coupling
+tcoupl                  = v-rescale                     ; modified Berendsen thermostat
+tc-grps                 = Protein_FAD_UMP	Water_SOD_CLA   ; two coupling groups - more accurate
+tau_t                   = 1.0  	  			 1.0             ; time constant, in ps
+ref_t                   = 310  	 	    	 310				;reference temperature, one for each group, in K
+; Pressure coupling
+pcoupl                  = C-rescale                     ; pressure coupling is on for NPT
+pcoupltype              = isotropic                     ; uniform scaling of box vectors
+tau_p                   = 5.0                           ; time constant, in ps
+ref_p                   = 1.0                           ; reference pressure, in bar
+compressibility         = 4.5e-5                        ; isothermal compressibility of water, bar^-1
+refcoord_scaling        = all 
+; Periodic boundary conditions
+pbc                     = xyz       ; 3-D PBC
+DispCorr                = no 
+; Velocity generation
+gen_vel                 = no        ; velocity generation off after NVT
+; Free energy control stuff
+free_energy              = yes
+init_lambda_state        = 9
+delta_lambda             = 0
+calc_lambda_neighbors    = -1
+couple-intramol          = yes
+; init_lambda_state        0  1    2    3    4    5    6    7    8    9  10   11   12   13   14  15   16   17   18   19  20   21   22  23   24   25 
+fep_lambdas              = 0 0.04 0.08 0.12 0.16 0.2 0.24 0.28 0.32 0.36 0.4 0.44 0.48 0.52 0.56 0.6 0.64 0.68 0.72 0.76 0.8 0.84 0.88 0.92 0.96 1 
+sc-function				 = gapsys
