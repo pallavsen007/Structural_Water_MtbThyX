@@ -1,0 +1,4 @@
+## To visualise the video
+## Type in your terminal
+
+vmd -e cw2_video.vmd
