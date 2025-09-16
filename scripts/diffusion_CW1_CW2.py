@@ -42,13 +42,15 @@ MSD_vs_SP = meansd/survival
 ### If one wants to calculate the diffusion coefficient for individual trajectories, then do comment out the suceeding lines
 #y = MSD_vs_SP 
 #x = np.arange(len(y))
-# Perform linear regression
+
+### Perform linear regression
 #slope, intercept, r_value, p_value, std_err = linregress(x, y)
 #plt.plot(x,y)
 #plt.show()
+
 ### Find out the diffusion coefficient
-#D = slope/2
-#print(D/100)  ### depending on the frames for your conversion
+#D = slope/6
+#print(D/20)  ### depending on the frames for your conversion
 
 
 # Convert to DataFrame with column name "Value"
