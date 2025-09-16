@@ -1,26 +1,31 @@
-### Import the necessary libraries
+### Import all the necessary libraries
+
 import MDAnalysis as mda
 from MDAnalysis.analysis.waterdynamics import MeanSquareDisplacement as MSD
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+import numpy as np
 from scipy import stats
 from scipy.stats import linregress
 
 
-## Load the universe with trajectory file and the structure file
+# Load the universe i.e the trajectory file and the 
 u = mda.Universe("./first.gro", "./nojump.xtc")
 
-## Define the selection for any water molecule from the water box 
-select = "resid 1000"
+### Selects all the Oxygen atoms in the water box
+select = "name OW"
 
-## Validate trajectory range
+# Validate selection
+selected_atoms = u.select_atoms(select)
+print(f"Number of selected atoms: {len(selected_atoms)}")
+if len(selected_atoms) == 0:
+    raise ValueError("Selection returned no atoms. Check your selection string.")
+
+# Validate trajectory range
 n_frames = len(u.trajectory)
 print(f"Number of frames in trajectory: {n_frames}")
 
-
-
-## Perform MSD analysis
+## Run the analyis here
 MSD_analysis = MSD(u, select,0,n_frames,11)
 MSD_analysis.run()
 msd = MSD_analysis.timeseries
@@ -30,11 +35,15 @@ x = np.arange(len(y))
 
 # Perform linear regression
 slope, intercept, r_value, p_value, std_err = linregress(x, y)
+
+### Plot and check  
 plt.plot(x,y)
 plt.show()
 
-D = slope/2
-print(D/100)
+### Print the self diffusion coefficient (D) of the water
+print(y)
+D = slope/6
+print(D) 
 
 # Convert to DataFrame with column name "Value"
 df = pd.DataFrame(msd, columns=['value'])
